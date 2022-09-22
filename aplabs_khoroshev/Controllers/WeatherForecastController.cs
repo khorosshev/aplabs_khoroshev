@@ -1,3 +1,4 @@
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace aplabs_khoroshev.Controllers
@@ -6,28 +7,19 @@ namespace aplabs_khoroshev.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly ILoggerManager _logger;
+        public WeatherForecastController(ILoggerManager logger)
         {
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            //_repository.Company.AnyMethodFromCompanyRepository();
+            //_repository.Employee.AnyMethodFromEmployeeRepository();
+            return new string[] { "value1", "value2" };
         }
+
     }
 }
