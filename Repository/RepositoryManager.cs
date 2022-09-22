@@ -13,8 +13,6 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
-        //private IDailyProgressRepository _dailyProgressRepository;
-        //private IFoodRepository _foodRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -38,25 +36,8 @@ namespace Repository
             }
         }
 
-        /*public IFoodRepository Food
-        {
-            get
-            {
-                if (_foodRepository == null)
-                    _foodRepository = new FoodRepository(_repositoryContext);
-                return _foodRepository;
-            }
-        }
-        public IDailyProgressRepository DailyProgress
-        {
-            get
-            {
-                if (_dailyProgressRepository == null)
-                    _dailyProgressRepository = new DailyProgressRepository(_repositoryContext);
-                return _dailyProgressRepository;
-            }
-        }*/
-
         public void Save() => _repositoryContext.SaveChanges();
+
+
     }
 }
