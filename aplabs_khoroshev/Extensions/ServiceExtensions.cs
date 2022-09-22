@@ -30,10 +30,12 @@ namespace aplabs_khoroshev.Extensions
 
             });
         public static void ConfigureLoggerService(this IServiceCollection services) =>
- services.AddScoped<ILoggerManager, LoggerManager>();
+            services.AddScoped<ILoggerManager, LoggerManager>();
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
-
+        public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+        builder.AddMvcOptions(config => config.OutputFormatters.Add(new
+        CsvOutputFormatter()));
     }
 }
