@@ -1,9 +1,11 @@
 ﻿using aplabs_khoroshev.ActionFilters;
 using aplabs_khoroshev.Extensions;
 using Contracts;
+using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Repository.DataShaping;
 
 public class Startup
 {
@@ -41,6 +43,7 @@ public class Startup
         services.AddScoped<ValidationFilterAttribute>();
         services.AddScoped<ValidateCompanyExistsAttribute>();
         services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+        services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
