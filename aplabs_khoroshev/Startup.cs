@@ -1,4 +1,5 @@
-﻿using aplabs_khoroshev.Extensions;
+﻿using aplabs_khoroshev.ActionFilters;
+using aplabs_khoroshev.Extensions;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,9 @@ public class Startup
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+        services.AddScoped<ValidationFilterAttribute>();
+        services.AddScoped<ValidateCompanyExistsAttribute>();
+        services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

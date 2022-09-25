@@ -1,4 +1,5 @@
-﻿using aplabs_khoroshev.ModelBinders;
+﻿using aplabs_khoroshev.ActionFilters;
+using aplabs_khoroshev.ModelBinders;
 using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
@@ -50,19 +51,40 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
-            if (company == null)
-            {
-                _logger.LogError("CompanyForCreationDto object sent from client is null.");
-            return BadRequest("CompanyForCreationDto object is null");
-            }
             var companyEntity = _mapper.Map<Company>(company);
             _repository.Company.CreateCompany(companyEntity);
             await _repository.SaveAsync();
-            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+            
+        var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
             return CreatedAtRoute("CompanyById", new { id = companyToReturn.Id },
             companyToReturn);
+        }
+
+
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> DeleteCompany(Guid id)
+        {
+            var company = HttpContext.Items["company"] as Company;
+            _repository.Company.DeleteCompany(company);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+
+
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+        {
+            var companyEntity = HttpContext.Items["company"] as Company;
+            _mapper.Map(company, companyEntity);
+            await _repository.SaveAsync();
+            return NoContent();
         }
 
         [HttpGet("collection/({ids})", Name = "CompanyCollection")]
