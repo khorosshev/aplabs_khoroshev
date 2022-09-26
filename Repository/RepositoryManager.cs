@@ -13,8 +13,8 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
-        //private IDailyProgressRepository _dailyProgressRepository;
-        //private IFoodRepository _foodRepository;
+        private ITicketRepository _ticketRepository;
+        private IBookRepository _bookRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -38,24 +38,24 @@ namespace Repository
             }
         }
 
-        /*public IFoodRepository Food
+        public ITicketRepository Ticket
         {
             get
             {
-                if (_foodRepository == null)
-                    _foodRepository = new FoodRepository(_repositoryContext);
-                return _foodRepository;
+                if (_ticketRepository == null)
+                    _ticketRepository = new TicketRepository(_repositoryContext);
+                return _ticketRepository;
             }
         }
-        public IDailyProgressRepository DailyProgress
+        public IBookRepository Book
         {
             get
             {
-                if (_dailyProgressRepository == null)
-                    _dailyProgressRepository = new DailyProgressRepository(_repositoryContext);
-                return _dailyProgressRepository;
+                if (_bookRepository == null)
+                    _bookRepository = new BookRepository(_repositoryContext);
+                return _bookRepository;
             }
-        }*/
+        }
 
         public void Save() => _repositoryContext.SaveChanges();
     }
