@@ -13,6 +13,8 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
+        private ITicketRepository _ticketRepository;
+        private IBookRepository _bookRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -36,8 +38,24 @@ namespace Repository
             }
         }
 
-        public void Save() => _repositoryContext.SaveChanges();
-
+        public ITicketRepository Ticket
+        {
+            get
+            {
+                if (_ticketRepository == null)
+                    _ticketRepository = new TicketRepository(_repositoryContext);
+                return _ticketRepository;
+            }
+        }
+        public IBookRepository Book
+        {
+            get
+            {
+                if (_bookRepository == null)
+                    _bookRepository = new BookRepository(_repositoryContext);
+                return _bookRepository;
+            }
+        }
 
     }
 }
