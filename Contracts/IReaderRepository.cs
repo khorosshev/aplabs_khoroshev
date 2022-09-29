@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
-    public interface ITicketRepository
+    public interface IReaderRepository
     { 
     }
 }

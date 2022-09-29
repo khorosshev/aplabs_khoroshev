@@ -21,7 +21,7 @@ namespace Entities.Configuration
                 Name = "Master and Margarita",
                 Author = "Mikhail Bulgakov",
                 Year = 1966,
-                Address = "Polezhaeva, 88"
+                Pages = 290
             },
             new Book
             {
@@ -29,7 +29,7 @@ namespace Entities.Configuration
                 Name = "Idiot",
                 Author = "Fyodor Dostoevsky",
                 Year = 1868,
-                Address = "Polezhaeva, 88"
+                Pages = 350
             }); ;
         }
     }

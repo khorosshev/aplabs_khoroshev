@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace aplabs_khoroshev.Migrations
 {
-    public partial class NewInitialData : Migration
+    public partial class DatabseCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace aplabs_khoroshev.Migrations
                     Name = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Author = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Year = table.Column<int>(type: "int", maxLength: 4, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Pages = table.Column<int>(type: "int", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,36 +25,36 @@ namespace aplabs_khoroshev.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ticketes",
+                name: "Readers",
                 columns: table => new
                 {
-                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Cinema = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Film = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Year = table.Column<int>(type: "int", maxLength: 3, nullable: false),
-                    Sit = table.Column<int>(type: "int", maxLength: 2, nullable: false)
+                    ReaderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Age = table.Column<int>(type: "int", maxLength: 2, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ticketes", x => x.TicketId);
+                    table.PrimaryKey("PK_Readers", x => x.ReaderId);
                 });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "BookId", "Address", "Author", "Name", "Year" },
+                columns: new[] { "BookId", "Author", "Name", "Pages", "Year" },
                 values: new object[,]
                 {
-                    { new Guid("20babca8-124a-1194-36fa-873476882d6a"), "Polezhaeva, 88", "Mikhail Bulgakov", "Master and Margarita", 1966 },
-                    { new Guid("29893053-4916-410c-ca78-2a54b999c870"), "Polezhaeva, 88", "Fyodor Dostoevsky", "Idiot", 1868 }
+                    { new Guid("20babca8-124a-1194-36fa-873476882d6a"), "Mikhail Bulgakov", "Master and Margarita", 290, 1966 },
+                    { new Guid("29893053-4916-410c-ca78-2a54b999c870"), "Fyodor Dostoevsky", "Idiot", 350, 1868 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Ticketes",
-                columns: new[] { "TicketId", "Cinema", "Film", "Sit", "Year" },
+                table: "Readers",
+                columns: new[] { "ReaderId", "Age", "Name", "Phone", "Surname" },
                 values: new object[,]
                 {
-                    { new Guid("29243053-4916-410c-ca78-2a54b999c870"), "Cinema-Park, RIO", "Drive", 12, 2007 },
-                    { new Guid("80abbca8-124a-1194-36fa-873476882d6a"), "Madagaskar, City-Park", "Apocalypse Now", 22, 1979 }
+                    { new Guid("29243053-4916-410c-ca78-2a54b999c870"), 19, "Anastasia", "+79506439933", "Burova" },
+                    { new Guid("80abbca8-124a-1194-36fa-873476882d6a"), 18, "Matvey", "+79506047092", "Khoroshev" }
                 });
         }
 
@@ -64,7 +64,7 @@ namespace aplabs_khoroshev.Migrations
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Ticketes");
+                name: "Readers");
         }
     }
 }

@@ -22,6 +22,54 @@ namespace aplabs_khoroshev.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Entities.Models.Book", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("BookId");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<int>("Pages")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasMaxLength(4)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("20babca8-124a-1194-36fa-873476882d6a"),
+                            Author = "Mikhail Bulgakov",
+                            Name = "Master and Margarita",
+                            Pages = 290,
+                            Year = 1966
+                        },
+                        new
+                        {
+                            Id = new Guid("29893053-4916-410c-ca78-2a54b999c870"),
+                            Author = "Fyodor Dostoevsky",
+                            Name = "Idiot",
+                            Pages = 350,
+                            Year = 1868
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -117,6 +165,55 @@ namespace aplabs_khoroshev.Migrations
                             CompanyId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3"),
                             Name = "Kane Miller",
                             Position = "Administrator"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Reader", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ReaderId");
+
+                    b.Property<int>("Age")
+                        .HasMaxLength(2)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Readers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("80abbca8-124a-1194-36fa-873476882d6a"),
+                            Age = 18,
+                            Name = "Matvey",
+                            Phone = "+79506047092",
+                            Surname = "Khoroshev"
+                        },
+                        new
+                        {
+                            Id = new Guid("29243053-4916-410c-ca78-2a54b999c870"),
+                            Age = 19,
+                            Name = "Anastasia",
+                            Phone = "+79506439933",
+                            Surname = "Burova"
                         });
                 });
 

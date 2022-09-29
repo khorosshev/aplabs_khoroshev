@@ -18,11 +18,11 @@ namespace Entities.Models
         [Required(ErrorMessage = "Author is a required field.")]
         [MaxLength(40, ErrorMessage = "Maximum length for the author is 40 digits")]
         public string Author { get; set; }
-        [Required(ErrorMessage = "year is a required field.")]
+        [Required(ErrorMessage = "Year is a required field.")]
         [MaxLength(4, ErrorMessage = "Maximum length for the year is 4 digits")]
         public int Year { get; set; }
-        [Required(ErrorMessage = "Library address is a required field.")]
-        [MaxLength(100, ErrorMessage = "Maximum length for the address is 100 digits")]
-        public string Address { get; set; }
+        [Required(ErrorMessage = "Pages is a required field.")]
+        [MaxLength(100, ErrorMessage = "Maximum length for the pages is 4 digits")]
+        public int Pages { get; set; }
     }
 }
