@@ -15,5 +15,10 @@ namespace Repository
         : base(repositoryContext)
         {
         }
+
+        public IEnumerable<Book> GetAllBooks(bool trackChanges) =>
+    FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+            .ToList();
     }
 }

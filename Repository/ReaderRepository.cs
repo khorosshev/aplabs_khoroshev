@@ -15,5 +15,10 @@ namespace Repository
         : base(repositoryContext)
         {
         }
+
+        public IEnumerable<Reader> GetAllReaders(bool trackChanges) =>
+    FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+            .ToList();
     }
 }
