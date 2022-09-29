@@ -13,7 +13,7 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
-        private ITicketRepository _ticketRepository;
+        private IReaderRepository _readerRepository;
         private IBookRepository _bookRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
@@ -38,13 +38,13 @@ namespace Repository
             }
         }
 
-        public ITicketRepository Ticket
+        public IReaderRepository Reader
         {
             get
             {
-                if (_ticketRepository == null)
-                    _ticketRepository = new TicketRepository(_repositoryContext);
-                return _ticketRepository;
+                if (_readerRepository == null)
+                    _readerRepository = new ReaderRepository(_repositoryContext);
+                return _readerRepository;
             }
         }
         public IBookRepository Book

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class TicketRepository : RepositoryBase<Ticket>, ITicketRepository
+    public class ReaderRepository : RepositoryBase<Reader>, IReaderRepository
     {
-        public TicketRepository(RepositoryContext repositoryContext)
+        public ReaderRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
         {
         }
