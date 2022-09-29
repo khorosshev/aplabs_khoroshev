@@ -57,5 +57,6 @@ namespace Repository
             }
         }
 
+        public void Save() => _repositoryContext.SaveChanges();
     }
 }
