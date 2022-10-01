@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
-    public interface IEmployeeRepository
+    public interface IBookRepository
     {
-        IEnumerable<Employee> GetAllEmployees(bool trackChanges);
+        IEnumerable<Book> GetAllBooks(bool trackChanges);
     }
 }

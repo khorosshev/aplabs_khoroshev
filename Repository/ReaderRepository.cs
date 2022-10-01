@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
+    public class ReaderRepository : RepositoryBase<Reader>, IReaderRepository
     {
-        public EmployeeRepository(RepositoryContext repositoryContext)
+        public ReaderRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
         {
         }
 
-        public IEnumerable<Employee> GetAllEmployees(bool trackChanges) =>
+        public IEnumerable<Reader> GetAllReaders(bool trackChanges) =>
     FindAll(trackChanges)
             .OrderBy(c => c.Name)
             .ToList();

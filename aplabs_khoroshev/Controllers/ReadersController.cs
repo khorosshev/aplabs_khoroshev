@@ -8,13 +8,13 @@ namespace aplabs_khoroshev.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class ReadersController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
 
-        public EmployeesController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public ReadersController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -22,8 +22,11 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEmployees()
+        public IActionResult GetReaders()
         {
+            var readers = _repository.Reader.GetAllReaders(trackChanges: false);
+            var readersDto = _mapper.Map<IEnumerable<ReaderDto>>(readers);
+            return Ok(readersDto);
         }
     }
 }
