@@ -22,5 +22,10 @@ namespace Repository
             .ToList();
         public Book GetBook(Guid bookId, bool trackChanges) => FindByCondition(c
 => c.Id.Equals(bookId), trackChanges).SingleOrDefault();
+
+        public void CreateBook(Book book) => Create(book);
+
+        public IEnumerable<Book> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
     }
 }

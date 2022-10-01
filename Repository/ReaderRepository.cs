@@ -21,7 +21,12 @@ namespace Repository
             .OrderBy(c => c.Name)
             .ToList();
 
+        public IEnumerable<Reader> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+
         public Reader GetReader(Guid readerId, bool trackChanges) => FindByCondition(c
 => c.Id.Equals(readerId), trackChanges).SingleOrDefault();
+
+        public void CreateReader(Reader reader) => Create(reader);
     }
 }
