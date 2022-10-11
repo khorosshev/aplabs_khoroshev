@@ -10,9 +10,13 @@ public class MappingProfile : Profile
         .ForMember(c => c.FullAddress,
         opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
         CreateMap<Employee, EmployeeDto>();
+        CreateMap<Book, BookDto>();
+        CreateMap<Reader, ReaderDto>();
         CreateMap<CompanyForCreationDto, Company>();
         CreateMap<EmployeeForCreationDto, Employee>();
         CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
         CreateMap<CompanyForUpdateDto, Company>();
+        CreateMap<BookForCreationDto, Book>();
+        CreateMap<ReaderForCreationDto, Reader>();
     }
 }

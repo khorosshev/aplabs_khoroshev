@@ -13,6 +13,8 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
+        private IReaderRepository _readerRepository;
+        private IBookRepository _bookRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -36,8 +38,25 @@ namespace Repository
             }
         }
 
+        public IReaderRepository Reader
+        {
+            get
+            {
+                if (_readerRepository == null)
+                    _readerRepository = new ReaderRepository(_repositoryContext);
+                return _readerRepository;
+            }
+        }
+        public IBookRepository Book
+        {
+            get
+            {
+                if (_bookRepository == null)
+                    _bookRepository = new BookRepository(_repositoryContext);
+                return _bookRepository;
+            }
+        }
+
         public void Save() => _repositoryContext.SaveChanges();
-
-
     }
 }

@@ -15,13 +15,12 @@ namespace aplabs_khoroshev.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        public EmployeesController(IRepositoryManager repository, ILoggerManager
-       logger,
-        IMapper mapper)
+
+        public EmployeesController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
         {
             _repository = repository;
-            _logger = logger;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet("{id}", Name = "GetEmployeeForCompany")]
