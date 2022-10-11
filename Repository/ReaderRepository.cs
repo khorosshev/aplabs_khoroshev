@@ -28,5 +28,10 @@ FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
 => c.Id.Equals(readerId), trackChanges).SingleOrDefault();
 
         public void CreateReader(Reader reader) => Create(reader);
+
+        public void DeleteReader(Reader reader)
+        {
+            Delete(reader);
+        }
     }
 }

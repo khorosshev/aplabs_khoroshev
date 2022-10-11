@@ -27,5 +27,10 @@ namespace Repository
 
         public IEnumerable<Book> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
 FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+
+        public void DeleteBook(Book book)
+        {
+            Delete(book);
+        }
     }
 }

@@ -15,7 +15,9 @@ public class MappingProfile : Profile
         CreateMap<CompanyForCreationDto, Company>();
         CreateMap<EmployeeForCreationDto, Employee>();
         CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
-        CreateMap<CompanyForUpdateDto, Company>();
+        CreateMap<CompanyForUpdateDto, Company>().ReverseMap();
+        CreateMap<BookForUpdateDto, Book>().ReverseMap();
+        CreateMap<ReaderForUpdateDto, Reader>().ReverseMap();
         CreateMap<BookForCreationDto, Book>();
         CreateMap<ReaderForCreationDto, Reader>();
     }

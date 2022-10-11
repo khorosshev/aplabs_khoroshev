@@ -4,6 +4,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace aplabs_khoroshev.Controllers
@@ -104,6 +105,62 @@ IEnumerable<ReaderForCreationDto> readerCollection)
             var ids = string.Join(",", readerCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("ReaderCollection", new { ids },
             readerCollectionToReturn);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteReader(Guid id)
+        {
+            var reader = _repository.Reader.GetReader(id, trackChanges: false);
+            if (reader == null)
+            {
+                _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Reader.DeleteReader(reader);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateReader(Guid id, [FromBody] ReaderForUpdateDto
+        reader)
+        {
+            if (reader == null)
+            {
+                _logger.LogError("ReaderForUpdateDto object sent from client is null.");
+                return BadRequest("ReaderForUpdateDto object is null");
+            }
+            var readerEntity = _repository.Reader.GetReader(id, trackChanges: true);
+            if (readerEntity == null)
+            {
+                _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(reader, readerEntity);
+            _repository.Save();
+            return NoContent();
+        }
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateReader(Guid id,
+[FromBody] JsonPatchDocument<ReaderForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var readerEntity = _repository.Reader.GetReader(id,
+           trackChanges: true);
+            if (readerEntity == null)
+            {
+                _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            var readerToPatch = _mapper.Map<ReaderForUpdateDto>(readerEntity);
+            patchDoc.ApplyTo(readerToPatch);
+
+            _mapper.Map(readerToPatch, readerEntity);
+            _repository.Save();
+            return NoContent();
         }
     }
 }
