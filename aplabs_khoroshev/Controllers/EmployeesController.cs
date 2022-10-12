@@ -32,7 +32,7 @@ namespace aplabs_khoroshev.Controllers
                 _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
                 return NotFound();
             }
-            var employeeDb = _repository.Employee.GetEmployee(companyId, id,
+            var employeeDb = await _repository.Employee.GetEmployeeAsync(companyId, id,
            trackChanges:
             false);
             if (employeeDb == null)
@@ -86,7 +86,7 @@ EmployeeForCreationDto employee)
                 _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
             return NotFound();
             }
-            var employeeForCompany = _repository.Employee.GetEmployee(companyId, id,
+            var employeeForCompany = await _repository.Employee.GetEmployeeAsync(companyId, id,
             trackChanges: false);
             if (employeeForCompany == null)
             {
@@ -119,7 +119,7 @@ EmployeeForUpdateDto employee)
                 _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
             return NotFound();
             }
-            var employeeEntity = _repository.Employee.GetEmployee(companyId, id,
+            var employeeEntity = await _repository.Employee.GetEmployeeAsync(companyId, id,
            trackChanges:
             true);
             if (employeeEntity == null)
@@ -146,7 +146,7 @@ EmployeeForUpdateDto employee)
                 _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
             return NotFound();
             }
-            var employeeEntity = _repository.Employee.GetEmployee(companyId, id,
+            var employeeEntity = await _repository.Employee.GetEmployeeAsync(companyId, id,
            trackChanges:
             true);
             if (employeeEntity == null)
@@ -162,8 +162,6 @@ EmployeeForUpdateDto employee)
                 _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
             }
-            _mapper.Map(employeeToPatch, employeeEntity);
-
             _mapper.Map(employeeToPatch, employeeEntity);
             await _repository.SaveAsync();
             return NoContent();

@@ -11,10 +11,10 @@ namespace Contracts
 {
     public interface IReaderRepository
     {
-        IEnumerable<Reader> GetAllReaders(bool trackChanges);
-        Reader GetReader(Guid readerId, bool trackChanges);
+        Task<IEnumerable<Reader>> GetAllReadersAsync(bool trackChanges);
+        Task<Reader> GetReaderAsync(Guid readerId, bool trackChanges);
         void CreateReader(Reader reader);
-        IEnumerable<Reader> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+        Task<IEnumerable<Reader>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges);
         void DeleteReader(Reader reader);
     }
 }

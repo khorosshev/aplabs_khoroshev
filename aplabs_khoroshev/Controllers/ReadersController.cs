@@ -25,17 +25,17 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetReaders()
+        public async Task<IActionResult> GetReaders()
         {
-            var readers = _repository.Reader.GetAllReaders(trackChanges: false);
+            var readers = await _repository.Reader.GetAllReadersAsync(trackChanges: false);
             var readersDto = _mapper.Map<IEnumerable<ReaderDto>>(readers);
             return Ok(readersDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetReader(Guid id)
+        public async Task<IActionResult> GetReader(Guid id)
         {
-            var reader = _repository.Reader.GetReader(id, trackChanges: false);
+            var reader = await _repository.Reader.GetReaderAsync(id, trackChanges: false);
             if (reader == null)
             {
                 _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
@@ -49,23 +49,28 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateReader([FromBody] ReaderForCreationDto reader)
+        public async Task<IActionResult> CreateReader([FromBody] ReaderForCreationDto reader)
         {
             if (reader == null)
             {
                 _logger.LogError("ReaderForCreationDto object sent from client is null.");
             return BadRequest("ReaderForCreationDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the ReaderForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
             var readerEntity = _mapper.Map<Reader>(reader);
             _repository.Reader.CreateReader(readerEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             var readerToReturn = _mapper.Map<ReaderDto>(readerEntity);
             return CreatedAtRoute("ReaderById", new { id = readerToReturn.Id },
             readerToReturn);
         }
 
         [HttpGet("collection/({ids})", Name = "ReaderCollection")]
-        public IActionResult GetCompanyCollection([ModelBinder(BinderType =
+        public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType =
 typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
@@ -73,7 +78,7 @@ typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
             }
-            var readerEntities = _repository.Reader.GetByIds(ids, trackChanges: false);
+            var readerEntities = await _repository.Reader.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != readerEntities.Count())
             {
@@ -86,7 +91,7 @@ typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateReaderCollection([FromBody]
+        public async Task<IActionResult> CreateReaderCollection([FromBody]
 IEnumerable<ReaderForCreationDto> readerCollection)
         {
             if (readerCollection == null)
@@ -99,7 +104,7 @@ IEnumerable<ReaderForCreationDto> readerCollection)
             {
                 _repository.Reader.CreateReader(reader);
             }
-            _repository.Save();
+            await _repository.SaveAsync();
             var readerCollectionToReturn =
             _mapper.Map<IEnumerable<ReaderDto>>(readerEntities);
             var ids = string.Join(",", readerCollectionToReturn.Select(c => c.Id));
@@ -107,20 +112,20 @@ IEnumerable<ReaderForCreationDto> readerCollection)
             readerCollectionToReturn);
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteReader(Guid id)
+        public async Task<IActionResult> DeleteReader(Guid id)
         {
-            var reader = _repository.Reader.GetReader(id, trackChanges: false);
+            var reader = await _repository.Reader.GetReaderAsync(id, trackChanges: false);
             if (reader == null)
             {
                 _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.Reader.DeleteReader(reader);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateReader(Guid id, [FromBody] ReaderForUpdateDto
+        public async Task<IActionResult> UpdateReader(Guid id, [FromBody] ReaderForUpdateDto
         reader)
         {
             if (reader == null)
@@ -128,18 +133,23 @@ IEnumerable<ReaderForCreationDto> readerCollection)
                 _logger.LogError("ReaderForUpdateDto object sent from client is null.");
                 return BadRequest("ReaderForUpdateDto object is null");
             }
-            var readerEntity = _repository.Reader.GetReader(id, trackChanges: true);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the ReaderForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+            var readerEntity = await _repository.Reader.GetReaderAsync(id, trackChanges: true);
             if (readerEntity == null)
             {
                 _logger.LogInfo($"Reader with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(reader, readerEntity);
-            _repository.Save();
+           await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateReader(Guid id,
+        public async Task<IActionResult> PartiallyUpdateReader(Guid id,
 [FromBody] JsonPatchDocument<ReaderForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -148,7 +158,7 @@ IEnumerable<ReaderForCreationDto> readerCollection)
                 return BadRequest("patchDoc object is null");
             }
 
-            var readerEntity = _repository.Reader.GetReader(id,
+            var readerEntity = await _repository.Reader.GetReaderAsync(id,
            trackChanges: true);
             if (readerEntity == null)
             {
@@ -156,10 +166,15 @@ IEnumerable<ReaderForCreationDto> readerCollection)
                 return NotFound();
             }
             var readerToPatch = _mapper.Map<ReaderForUpdateDto>(readerEntity);
-            patchDoc.ApplyTo(readerToPatch);
-
+            patchDoc.ApplyTo(readerToPatch, ModelState);
+            TryValidateModel(readerToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
             _mapper.Map(readerToPatch, readerEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

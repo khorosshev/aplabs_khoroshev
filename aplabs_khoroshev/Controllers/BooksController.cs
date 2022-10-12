@@ -25,17 +25,17 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetBooks()
+        public async Task<IActionResult> GetBooksAsync()
         {
-            var books = _repository.Book.GetAllBooks(trackChanges: false);
+            var books = await _repository.Book.GetAllBooksAsync(trackChanges: false);
             var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
             return Ok(booksDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetBook(Guid id)
+        public async Task<IActionResult> GetBookAsync(Guid id)
         {
-            var book = _repository.Book.GetBook(id, trackChanges: false);
+            var book = await _repository.Book.GetBookAsync(id, trackChanges: false);
             if (book == null)
             {
                 _logger.LogInfo($"Book with id: {id} doesn't exist in the database.");
@@ -49,30 +49,35 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateBook([FromBody] BookForCreationDto book)
+        public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
             if (book == null)
             {
                 _logger.LogError("BookForCreationDto object sent from client is null.");
             return BadRequest("BookForCreationDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the BooksForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
             var bookEntity = _mapper.Map<Book>(book);
             _repository.Book.CreateBook(bookEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             var bookToReturn = _mapper.Map<BookDto>(bookEntity);
             return CreatedAtRoute("BookById", new { id = bookToReturn.Id },
             bookToReturn);
         }
 
         [HttpGet("collection/({ids})", Name = "BookCollection")]
-        public IActionResult GetBookCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetBookCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
             }
-            var bookEntities = _repository.Book.GetByIds(ids, trackChanges: false);
+            var bookEntities = await _repository.Book.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != bookEntities.Count())
             {
@@ -85,7 +90,7 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateBookCollection([FromBody]
+        public async Task<IActionResult> CreateBookCollection([FromBody]
 IEnumerable<BookForCreationDto> bookCollection)
         {
             if (bookCollection == null)
@@ -98,7 +103,7 @@ IEnumerable<BookForCreationDto> bookCollection)
             {
                 _repository.Book.CreateBook(book);
             }
-            _repository.Save();
+            await _repository.SaveAsync();
             var bookCollectionToReturn =
             _mapper.Map<IEnumerable<BookDto>>(bookEntities);
             var ids = string.Join(",", bookCollectionToReturn.Select(c => c.Id));
@@ -106,20 +111,20 @@ IEnumerable<BookForCreationDto> bookCollection)
             bookCollectionToReturn);
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteBook(Guid id)
+        public async Task<IActionResult> DeleteBook(Guid id)
         {
-            var book = _repository.Book.GetBook(id, trackChanges: false);
+            var book = await _repository.Book.GetBookAsync(id, trackChanges: false);
             if (book == null)
             {
                 _logger.LogInfo($"Book with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.Book.DeleteBook(book);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateBook(Guid id, [FromBody] BookForUpdateDto
+        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookForUpdateDto
         book)
         {
             if (book == null)
@@ -127,18 +132,23 @@ IEnumerable<BookForCreationDto> bookCollection)
             _logger.LogError("BookForUpdateDto object sent from client is null.");
                 return BadRequest("BookForUpdateDto object is null");
             }
-            var bookEntity = _repository.Book.GetBook(id, trackChanges: true);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the BookForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+            var bookEntity = await _repository.Book.GetBookAsync(id, trackChanges: true);
             if (bookEntity == null)
             {
                 _logger.LogInfo($"Book with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(book, bookEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateBook(Guid id,
+        public async Task<IActionResult> PartiallyUpdateBook(Guid id,
 [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -147,7 +157,7 @@ IEnumerable<BookForCreationDto> bookCollection)
                 return BadRequest("patchDoc object is null");
             }
 
-            var bookEntity = _repository.Book.GetBook(id,
+            var bookEntity = await _repository.Book.GetBookAsync(id,
            trackChanges: true);
             if (bookEntity == null)
             {
@@ -155,10 +165,15 @@ IEnumerable<BookForCreationDto> bookCollection)
                 return NotFound();
             }
             var bookToPatch = _mapper.Map<BookForUpdateDto>(bookEntity);
-            patchDoc.ApplyTo(bookToPatch);
-
+            patchDoc.ApplyTo(bookToPatch, ModelState);
+            TryValidateModel(bookToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
             _mapper.Map(bookToPatch, bookEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
