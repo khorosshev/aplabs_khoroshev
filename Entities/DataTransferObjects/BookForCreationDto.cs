@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects
 {
-    public class EmployeeDto
+    public class BookForCreationDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
-        public int Age { get; set; }
-        public string Position { get; set; }
-        public Guid CompanyId { get; set; }
+        public string Author { get; set; }
+        public int Year { get; set; }
+        public int Pages { get; set; }
     }
 }
