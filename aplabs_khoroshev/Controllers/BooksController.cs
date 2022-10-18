@@ -1,4 +1,5 @@
-﻿using aplabs_khoroshev.ModelBinders;
+﻿using aplabs_khoroshev.ActionFilters;
+using aplabs_khoroshev.ModelBinders;
 using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
@@ -49,18 +50,9 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
-            if (book == null)
-            {
-                _logger.LogError("BookForCreationDto object sent from client is null.");
-            return BadRequest("BookForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the BooksForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
             var bookEntity = _mapper.Map<Book>(book);
             _repository.Book.CreateBook(bookEntity);
             await _repository.SaveAsync();
@@ -91,7 +83,7 @@ namespace aplabs_khoroshev.Controllers
 
         [HttpPost("collection")]
         public async Task<IActionResult> CreateBookCollection([FromBody]
-IEnumerable<BookForCreationDto> bookCollection)
+        IEnumerable<BookForCreationDto> bookCollection)
         {
             if (bookCollection == null)
             {
@@ -111,45 +103,30 @@ IEnumerable<BookForCreationDto> bookCollection)
             bookCollectionToReturn);
         }
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateBookExistsAttribute))]
         public async Task<IActionResult> DeleteBook(Guid id)
         {
-            var book = await _repository.Book.GetBookAsync(id, trackChanges: false);
-            if (book == null)
-            {
-                _logger.LogInfo($"Book with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var book = HttpContext.Items["book"] as Book;
             _repository.Book.DeleteBook(book);
             await _repository.SaveAsync();
             return NoContent();
         }
+
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateBookExistsAttribute))]
         public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookForUpdateDto
         book)
         {
-            if (book == null)
-            {
-            _logger.LogError("BookForUpdateDto object sent from client is null.");
-                return BadRequest("BookForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the BookForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var bookEntity = await _repository.Book.GetBookAsync(id, trackChanges: true);
-            if (bookEntity == null)
-            {
-                _logger.LogInfo($"Book with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var bookEntity = HttpContext.Items["book"] as Book;
             _mapper.Map(book, bookEntity);
             await _repository.SaveAsync();
             return NoContent();
         }
+        
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateBook(Guid id,
-[FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {

@@ -31,7 +31,7 @@ namespace aplabs_khoroshev.ActionFilters
                 context.Result = new NotFoundResult();
             }
             var id = (Guid)context.ActionArguments["id"];
-            var employee =  _repository.Employee.GetEmployee(companyId, id,
+            var employee =  _repository.Employee.GetEmployeeAsync(companyId, id,
             trackChanges);
             if (employee == null)
             {

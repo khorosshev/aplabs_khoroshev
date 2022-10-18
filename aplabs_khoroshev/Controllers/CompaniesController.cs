@@ -55,16 +55,6 @@ namespace aplabs_khoroshev.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
-            if (company == null)
-            {
-                _logger.LogError("CompanyForCreationDto object sent from client is null.");
-            return BadRequest("CompanyForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
-            return UnprocessableEntity(ModelState);
-            }
             var companyEntity = _mapper.Map<Company>(company);
             _repository.Company.CreateCompany(companyEntity);
             await _repository.SaveAsync();
@@ -146,43 +136,6 @@ namespace aplabs_khoroshev.Controllers
             companyCollectionToReturn);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompany(Guid id)
-        {
-            var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
-            if (company == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
-            _repository.Company.DeleteCompany(company);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
-        {
-            if (company == null)
-            {  
-            _logger.LogError("CompanyForUpdateDto object sent from client is null.");
-                return BadRequest("CompanyForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the CompanyForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-            var companyEntity = _repository.Company.GetCompanyAsync(id, trackChanges: true);
-            if (companyEntity == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
-            _mapper.Map(company, companyEntity);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateCompany(Guid id,
         [FromBody] JsonPatchDocument<CompanyForUpdateDto> patchDoc)

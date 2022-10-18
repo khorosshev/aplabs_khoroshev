@@ -40,6 +40,8 @@ public class Startup
         });
         services.AddScoped<ValidationFilterAttribute>();
         services.AddScoped<ValidateCompanyExistsAttribute>();
+        services.AddScoped<ValidateReaderExistsAttribute>();
+        services.AddScoped<ValidateBookExistsAttribute>();
         services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
     }
 
