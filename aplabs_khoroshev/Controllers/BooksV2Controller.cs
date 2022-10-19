@@ -15,6 +15,7 @@ namespace aplabs_khoroshev.Controllers
             _repository = repository;
         }
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetBooks()
         {
             var books = await
