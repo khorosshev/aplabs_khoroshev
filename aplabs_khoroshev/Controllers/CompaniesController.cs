@@ -28,7 +28,6 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet("{id}", Name = "CompanyById")]
-
         public async Task<IActionResult> GetCompany(Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
@@ -45,6 +44,7 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetCompanies()
         {
             var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges:false);

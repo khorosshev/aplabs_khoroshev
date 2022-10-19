@@ -26,6 +26,7 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetBooksAsync()
         {
             var books = await _repository.Book.GetAllBooksAsync(trackChanges: false);
@@ -152,6 +153,13 @@ namespace aplabs_khoroshev.Controllers
             _mapper.Map(bookToPatch, bookEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+
+        [HttpOptions]
+        public IActionResult GetBooksOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
         }
 
     }

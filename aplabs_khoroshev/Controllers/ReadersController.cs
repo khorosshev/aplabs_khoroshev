@@ -26,6 +26,7 @@ namespace aplabs_khoroshev.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetReaders()
         {
             var readers = await _repository.Reader.GetAllReadersAsync(trackChanges: false);
@@ -152,6 +153,13 @@ namespace aplabs_khoroshev.Controllers
             _mapper.Map(readerToPatch, readerEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+
+        [HttpOptions]
+        public IActionResult GetReadersOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
         }
     }
 }
