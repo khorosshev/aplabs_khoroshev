@@ -5,6 +5,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -118,6 +119,11 @@ namespace aplabs_khoroshev.Controllers
                 _logger.LogError("Company collection sent from client is null.");
                 return BadRequest("Company collection is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CompanyForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
             var companyEntities = _mapper.Map<IEnumerable<Company>>(companyCollection);
             foreach (var company in companyEntities)
             {
@@ -129,6 +135,36 @@ namespace aplabs_khoroshev.Controllers
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CompanyCollection", new { ids },
             companyCollectionToReturn);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartiallyUpdateCompany(Guid id,
+        [FromBody] JsonPatchDocument<CompanyForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+           
+            var companyEntity = _repository.Company.GetCompanyAsync(id,
+           trackChanges:true);
+            if (companyEntity == null)
+            {
+                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
+            return NotFound();
+            }
+            var companyToPatch = _mapper.Map<CompanyForUpdateDto>(companyEntity);
+            patchDoc.ApplyTo(companyToPatch, ModelState);
+            TryValidateModel(companyToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+            _mapper.Map(companyToPatch, companyEntity);
+            await _repository.SaveAsync();
+            return NoContent();
         }
 
         [HttpOptions]

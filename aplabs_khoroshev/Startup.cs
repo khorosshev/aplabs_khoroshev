@@ -42,6 +42,8 @@ public class Startup
         });
         services.AddScoped<ValidationFilterAttribute>();
         services.AddScoped<ValidateCompanyExistsAttribute>();
+        services.AddScoped<ValidateReaderExistsAttribute>();
+        services.AddScoped<ValidateBookExistsAttribute>();
         services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
         services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
         services.ConfigureVersioning();
