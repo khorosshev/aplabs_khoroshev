@@ -15,6 +15,7 @@ namespace aplabs_khoroshev.Controllers
     [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class CompaniesController : ControllerBase
     {
         //auth
@@ -54,6 +55,14 @@ namespace aplabs_khoroshev.Controllers
             return Ok(companiesDto);
         }
 
+        /// <summary>
+        /// Создает вновь созданную компанию
+        /// </summary>
+        /// <param name="company"></param>.
+        /// <returns>Вновь созданная компания</returns>.
+        /// <response code="201"> Возвращает только что созданный элемент</response>.
+        /// <response code="400"> Если элемент равен null</response>.
+        /// <код ответа="422"> Если модель недействительна</ответ>.
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)

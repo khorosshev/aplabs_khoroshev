@@ -12,6 +12,7 @@ namespace aplabs_khoroshev.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class BooksController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
