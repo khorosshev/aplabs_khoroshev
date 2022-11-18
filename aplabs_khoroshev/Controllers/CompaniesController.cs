@@ -17,6 +17,7 @@ namespace aplabs_khoroshev.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
+        //auth
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
