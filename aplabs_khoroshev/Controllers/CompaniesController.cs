@@ -14,7 +14,7 @@ namespace aplabs_khoroshev.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/companies")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Manager")]
     public class CompaniesController : ControllerBase
     {
         //auth
