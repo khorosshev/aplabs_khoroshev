@@ -114,13 +114,13 @@ namespace aplabs_khoroshev.Extensions
                     TermsOfService = new Uri("https://example.com/terms"),
                     Contact = new OpenApiContact
                     {
-                        Name = "John Doe",
-                        Email = "John.Doe@gmail.com",
-                        Url = new Uri("https://twitter.com/johndoe"),
+                        Name = "Matvey Khoroshev",
+                        Email = "mhenlightened@yandex.ru",
+                        Url = new Uri("https://vk.com/khorosshev"),
                     },
                     License = new OpenApiLicense
                     {
-                        Name = "CompanyEmployees API LICX",
+                        Name = "ap_labs API LICX",
                         Url = new Uri("https://example.com/license"),
                     }
                 });

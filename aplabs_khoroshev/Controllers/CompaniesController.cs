@@ -30,6 +30,10 @@ namespace aplabs_khoroshev.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Получает компанию по ID
+        /// </summary>
+        /// <returns>Компания</returns>.
         [HttpGet("{id}", Name = "CompanyById")]
         public async Task<IActionResult> GetCompany(Guid id)
         {
@@ -46,7 +50,15 @@ namespace aplabs_khoroshev.Controllers
             }
         }
 
+        /// <summary>
+        /// Получает все компании
+        /// </summary>
+        /// <returns>Список компаний</returns>.
         [HttpGet(Name = "GetCompanies")]
+        /// <summary>
+        /// Проверяет существование компаний
+        /// </summary>
+        /// /// <returns>Флаг существования компаний</returns>.
         [HttpHead]
         public async Task<IActionResult> GetCompanies()
         {
@@ -76,7 +88,9 @@ namespace aplabs_khoroshev.Controllers
             companyToReturn);
         }
 
-
+        /// <summary>
+        /// Удаляет компанию по ID
+        /// </summary>
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> DeleteCompany(Guid id)
@@ -87,8 +101,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
-
-
+        /// <summary>
+        /// Изменяет компанию по ID (очищая старые свойства)
+        /// </summary>
+        /// <returns> Измененная компания</returns>.
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
@@ -100,6 +116,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Получает список компаний
+        /// </summary>
+        /// <returns>Список компаний</returns>.
         [HttpGet("collection/({ids})", Name = "CompanyCollection")]
         public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType =
         typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
@@ -121,6 +141,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(companiesToReturn);
         }
 
+        /// <summary>
+        /// Создает список компаний
+        /// </summary>
+        /// <returns>Созданный список компаний</returns>.
         [HttpPost("collection")]
         public async Task<IActionResult> CreateCompanyCollection([FromBody]
         IEnumerable<CompanyForCreationDto> companyCollection)
@@ -148,6 +172,10 @@ namespace aplabs_khoroshev.Controllers
             companyCollectionToReturn);
         }
 
+        /// <summary>
+        /// Изменяет компанию по ID (сохраняя неизмененные свойства)
+        /// </summary>
+        /// <returns> Измененная компания</returns>.
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateCompany(Guid id,
         [FromBody] JsonPatchDocument<CompanyForUpdateDto> patchDoc)
@@ -178,6 +206,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Получает параметры для компании, не затрагивая сам ресурс
+        /// </summary>
+        /// <returns>Параметры компании</returns>.
         [HttpOptions]
         public IActionResult GetCompaniesOptions()
         {

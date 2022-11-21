@@ -27,6 +27,9 @@ namespace aplabs_khoroshev.Controllers
             _authManager = authManager;
         }
 
+        /// <summary>
+        /// Авторизация
+        /// </summary>
         [HttpPost("login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
@@ -39,7 +42,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(new { Token = await _authManager.CreateToken() });
         }
 
-    [HttpPost]
+        /// <summary>
+        /// Регистрация
+        /// </summary>
+        [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto
  userForRegistration)

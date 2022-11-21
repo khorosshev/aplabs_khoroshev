@@ -28,6 +28,10 @@ namespace aplabs_khoroshev.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Получает список всех книг
+        /// </summary>
+        /// <returns>Список книг</returns>.
         [HttpGet]
         [HttpHead]
         public async Task<IActionResult> GetBooksAsync()
@@ -37,6 +41,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(booksDto);
         }
 
+        /// <summary>
+        /// Получает книгу по ID
+        /// </summary>
+        /// <returns>Книга</returns>.
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookAsync(Guid id)
         {
@@ -53,6 +61,14 @@ namespace aplabs_khoroshev.Controllers
             }
         }
 
+        /// <summary>
+        /// Создает вновь созданную книгу
+        /// </summary>
+        /// <param name="book"></param>.
+        /// <returns>Вновь созданная книга</returns>.
+        /// <response code="201"> Возвращает только что созданный элемент</response>.
+        /// <response code="400"> Если элемент равен null</response>.
+        /// <responce code="422"> Если модель недействительна</responce>.
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
@@ -65,6 +81,10 @@ namespace aplabs_khoroshev.Controllers
             bookToReturn);
         }
 
+        /// <summary>
+        /// Получает коллекцию книг
+        /// </summary>
+        /// <returns>Список книга</returns>.
         [HttpGet("collection/({ids})", Name = "BookCollection")]
         public async Task<IActionResult> GetBookCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
@@ -85,6 +105,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(booksToReturn);
         }
 
+        /// <summary>
+        /// Создает коллекцию книг
+        /// </summary>
+        /// <returns>Вновь созданная коллекция книг</returns>.
         [HttpPost("collection")]
         public async Task<IActionResult> CreateBookCollection([FromBody]
         IEnumerable<BookForCreationDto> bookCollection)
@@ -106,6 +130,10 @@ namespace aplabs_khoroshev.Controllers
             return CreatedAtRoute("BookCollection", new { ids },
             bookCollectionToReturn);
         }
+
+        /// <summary>
+        /// Удаляет книгу
+        /// </summary>
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateBookExistsAttribute))]
         public async Task<IActionResult> DeleteBook(Guid id)
@@ -116,6 +144,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Изменяет книгу (стирая старые свойства)
+        /// </summary>
+        /// <returns>Измененная книга</returns>.
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateBookExistsAttribute))]
@@ -127,7 +159,11 @@ namespace aplabs_khoroshev.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        
+
+        /// <summary>
+        /// Изменяет книгу (сохраняя старые свойства)
+        /// </summary>
+        /// <returns>Измененная книга</returns>.
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateBook(Guid id,
         [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
@@ -158,6 +194,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Получает параметры для книги, не затрагивая сам ресурс
+        /// </summary>
+        /// <returns>Параметры книги</returns>.
         [HttpOptions]
         public IActionResult GetBooksOptions()
         {

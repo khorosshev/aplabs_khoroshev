@@ -28,6 +28,10 @@ namespace aplabs_khoroshev.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Получает всех читателей
+        /// </summary>
+        /// <returns>Список читателей</returns>.
         [HttpGet]
         [HttpHead]
         public async Task<IActionResult> GetReaders()
@@ -37,6 +41,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(readersDto);
         }
 
+        /// <summary>
+        /// Получает читателя по ID
+        /// </summary>
+        /// <returns>Читатель</returns>.
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReader(Guid id)
         {
@@ -53,6 +61,10 @@ namespace aplabs_khoroshev.Controllers
             }
         }
 
+        /// <summary>
+        /// Создает читателя
+        /// </summary>
+        /// <returns>Созданный читатель</returns>.
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateReader([FromBody] ReaderForCreationDto reader)
@@ -65,6 +77,10 @@ namespace aplabs_khoroshev.Controllers
             readerToReturn);
         }
 
+        /// <summary>
+        /// Получает коллекцию читателей
+        /// </summary>
+        /// <returns>Список читателей</returns>.
         [HttpGet("collection/({ids})", Name = "ReaderCollection")]
         public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType =
         typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
@@ -86,6 +102,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(readersToReturn);
         }
 
+        /// <summary>
+        /// Создает коллекцию читателей
+        /// </summary>
+        /// <returns>Созданный список читателей</returns>.
         [HttpPost("collection")]
         public async Task<IActionResult> CreateReaderCollection([FromBody]
         IEnumerable<ReaderForCreationDto> readerCollection)
@@ -107,6 +127,10 @@ namespace aplabs_khoroshev.Controllers
             return CreatedAtRoute("ReaderCollection", new { ids },
             readerCollectionToReturn);
         }
+
+        /// <summary>
+        /// Удаляет читателя по ID
+        /// </summary>
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateReaderExistsAttribute))]
         public async Task<IActionResult> DeleteReader(Guid id)
@@ -117,6 +141,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Изменяет читателя (стирая старые свойства)
+        /// </summary>
+        /// <returns>Измененный читатель</returns>.
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateReaderExistsAttribute))]
@@ -128,6 +156,11 @@ namespace aplabs_khoroshev.Controllers
            await _repository.SaveAsync();
             return NoContent();
         }
+
+        /// <summary>
+        /// Изменяет читателя (сохраняя старые свойства)
+        /// </summary>
+        /// <returns>Измененный читатель</returns>.
         [HttpPatch("{id}")]
         public async Task<IActionResult> PartiallyUpdateReader(Guid id,
         [FromBody] JsonPatchDocument<ReaderForUpdateDto> patchDoc)
@@ -158,6 +191,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Получает параметры для читателя, не затрагивая сам ресурс
+        /// </summary>
+        /// <returns>Параметры читателя</returns>.
         [HttpOptions]
         public IActionResult GetReadersOptions()
         {

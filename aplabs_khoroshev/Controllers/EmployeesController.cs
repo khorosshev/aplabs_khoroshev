@@ -32,6 +32,10 @@ namespace aplabs_khoroshev.Controllers
             _dataShaper = dataShaper;
         }
 
+        /// <summary>
+        /// Получает список работников по ID компании
+        /// </summary>
+        /// <returns>Список работников</returns>.
         [HttpGet]
         [HttpHead]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,
@@ -53,7 +57,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(_dataShaper.ShapeData(employeesDto, employeeParameters.Fields));
         }
 
-
+        /// <summary>
+        /// Получает работника по ID компании
+        /// </summary>
+        /// <returns>Работник</returns>.
         [HttpGet("{id}", Name = "GetEmployeeForCompany")]
         public async Task<IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
         {
@@ -75,6 +82,10 @@ namespace aplabs_khoroshev.Controllers
             return Ok(employee);
         }
 
+        /// <summary>
+        /// Создает работника компании по её ID
+        /// </summary>
+        /// <returns>Созданный работник</returns>.
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody]
@@ -97,6 +108,9 @@ namespace aplabs_khoroshev.Controllers
             }, employeeToReturn);
         }
 
+        /// <summary>
+        /// Удаляет работника компании по ID
+        /// </summary>
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
@@ -107,6 +121,10 @@ namespace aplabs_khoroshev.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Изменяет работника по ID, стирая старые свойсва
+        /// </summary>
+        /// <returns>Измененный работник</returns>.
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
@@ -118,6 +136,11 @@ namespace aplabs_khoroshev.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+
+        /// <summary>
+        /// Изменяет работника по ID, сохраняя старые свойсва
+        /// </summary>
+        /// <returns>Измененный работник</returns>.
         [HttpPatch("{id}")]
         [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
