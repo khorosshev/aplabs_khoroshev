@@ -4,14 +4,16 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace aplabs_khoroshev.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Manager")]
     [ApiExplorerSettings(GroupName = "v1")]
     public class ReadersController : ControllerBase
     {

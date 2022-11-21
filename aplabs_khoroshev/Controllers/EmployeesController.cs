@@ -4,16 +4,18 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repository.DataShaping;
+using System.Data;
 
 namespace aplabs_khoroshev.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Manager")]
     [ApiExplorerSettings(GroupName = "v1")]
     public class EmployeesController : ControllerBase
     {

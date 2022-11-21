@@ -14,7 +14,7 @@ namespace aplabs_khoroshev.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/companies")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Manager")]
     [ApiExplorerSettings(GroupName = "v1")]
     public class CompaniesController : ControllerBase
     {
@@ -46,7 +46,7 @@ namespace aplabs_khoroshev.Controllers
             }
         }
 
-        [HttpGet(Name = "GetCompanies"), Authorize(Roles = "Manager")]
+        [HttpGet(Name = "GetCompanies")]
         [HttpHead]
         public async Task<IActionResult> GetCompanies()
         {
@@ -62,7 +62,7 @@ namespace aplabs_khoroshev.Controllers
         /// <returns>Вновь созданная компания</returns>.
         /// <response code="201"> Возвращает только что созданный элемент</response>.
         /// <response code="400"> Если элемент равен null</response>.
-        /// <код ответа="422"> Если модель недействительна</ответ>.
+        /// <responce code="422"> Если модель недействительна</responce>.
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
